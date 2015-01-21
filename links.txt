@@ -1,0 +1,13 @@
+struct.pack
+	https://docs.python.org/3.4/library/struct.html
+
+int.from_bytes
+	https://docs.python.org/3/library/stdtypes.html
+
+naming conventions
+	https://www.python.org/dev/peps/pep-0008/#class-names
+
+is vs ==
+	http://stackoverflow.com/questions/2988017/string-comparison-in-python-is-vs
+
+aaaaä
