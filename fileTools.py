@@ -38,9 +38,19 @@ class FileReader():
 
 	def __read_binary(self, path):
 		data = list()
-		with open(path, 'rb') as f:
-			data = f.read().decode(self.encoding)
+		for b in self.__read_binary_chunk(path, 256):
+			data.append(b)
 		return data
+
+	def __read_binary_chunk(self, path, chunk_size):
+		with open(path, 'rb') as f:
+			while True:
+				chunk = f.read(chunk_size)
+				if chunk:
+					for b in chunk:
+						yield b
+				else:
+					break
 
 class FileWriter():
 	encoding = 'ascii'
@@ -62,7 +72,6 @@ class FileWriter():
 		self.encoding = coding
 
 	def __write_binary(self, path, data, fmt):
-		#bin(int.from_bytes(fileData.encode(), 'big')) #http://stackoverflow.com/questions/7396849/convert-binary-to-ascii-and-vice-versa-python
 		with open(path, 'wb') as f:
 			# B = unsigned char
 			for line in data:
@@ -70,3 +79,34 @@ class FileWriter():
 					b = int.from_bytes(ch.encode(self.encoding), 'little')#https://docs.python.org/3/library/stdtypes.html 				
 					f.write(struct.pack(fmt, b)) # https://docs.python.org/3.4/library/struct.html
 		
+class CustomEncoder():
+	"""docstring for CustomEncoder"""
+	def ascii_to_custom(self, data):
+		result = list()
+		for line in data:
+			for ch in line:
+				b = ord(ch)
+				if (b == 32): # 'space'
+					b = 58
+				elif (b == 46): # '.'
+					b = 59
+				elif (b == 10): # 'new line'
+					b = 60
+				b = b - 47 # ASCII '0' is 48 decimal
+				result.append(b)
+		return result, "custom"
+
+	def custom_to_ascii(self, data):
+		result = list()	
+		for i in data:
+			value = ''
+			if (i == 11):
+				value = chr(32)
+			elif (i == 12):
+				value = chr(46)
+			elif (i == 13):
+				value = chr(10)
+			else:
+				value = chr(i + 47)
+			result.append(value)
+		return result, "ascii"

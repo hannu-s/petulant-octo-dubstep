@@ -1,4 +1,4 @@
-from fileTools import FileReader, FileWriter
+from fileTools import FileReader, FileWriter, CustomEncoder, FileType
 import sys
 
 def main(read_path, write_path, coding = "utf-8", format = "B"):
@@ -12,6 +12,14 @@ def main(read_path, write_path, coding = "utf-8", format = "B"):
 
 	data = reader.read(read_path)
 
+	encoder = CustomEncoder()
+	if (FileType.is_file_name_bin(read_path) and FileType.is_file_name_txt(write_path)):
+		data, coding = encoder.custom_to_ascii(data)
+	elif (FileType.is_file_name_txt(read_path) and FileType.is_file_name_bin(write_path)):
+		data, coding = encoder.ascii_to_custom(data)
+	else:
+		print("You are trying to write to same type of file. Aborting.")
+		exit()
 	writer = FileWriter()
 	writer.set_encoding(coding)
 	writer.write(write_path, data, format)
