@@ -74,8 +74,8 @@ class FileWriter():
 	def __write_binary(self, path, data, fmt):
 		with open(path, 'wb') as f:
 			# B = unsigned char
-			for b in data: 				
-				f.write(struct.pack(fmt, b)) # https://docs.python.org/3.4/library/struct.html
+			for b in data:
+				f.write(struct.pack('?', b)) # https://docs.python.org/3.4/library/struct.html
 		
 class CustomEncoder():
 	"""docstring for CustomEncoder"""
