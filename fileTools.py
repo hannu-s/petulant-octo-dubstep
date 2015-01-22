@@ -16,7 +16,7 @@ class FileType():
 
 
 class FileReader():
-	las_chunk_size = 37
+	las_chunk_size = 31
 	"""docstring for FileReader"""
 	def read(self, filePath):
 		if FileType.is_file_name_txt(filePath):
@@ -42,6 +42,7 @@ class FileReader():
 		with open(path) as f:
 			for line in f:
 				line = line.replace('\n','')
+				parts = list()
 				parts = line.split(' ')
 				data.append(parts)
 		return data
@@ -57,31 +58,51 @@ class FileReader():
 			while True:
 				chunk = f.read(self.las_chunk_size)
 				if chunk:
-					value = struct.unpack('fff', chunk[:12])
-					value += struct.unpack('H', chunk[12:14])
-					value += struct.unpack('II', chunk[14:22])
-					value += struct.unpack('BBBBB', chunk[22:27])
-					value += struct.unpack('H', chunk[27:29])
-					value += struct.unpack('d', chunk[29:37])
-					yield value
+					try:
+						value = struct.unpack('fff', chunk[:12])
+						value += struct.unpack('H', chunk[12:14])
+						value += struct.unpack('BB', chunk[14:16])
+						value += struct.unpack('BB', chunk[16:18])	#boolean flags
+						value += struct.unpack('BBB', chunk[18:21])
+						value += struct.unpack('H', chunk[21:23])
+						value += struct.unpack('d', chunk[23:31])
+						yield value
+					except:
+						raise Exception('Unable to las read file.')
 				else:
 					break
 
 class FileWriter():
 	"""docstring for FileWriter"""
-	def write(self, filePath, data):
-		if FileType.is_file_name_txt(filePath):
-			self.__write_ascii(filePath, data)
-		elif FileType.is_file_name_las(filePath):
-			self.__write_las(filePath, data)
+	def write(self, file_path, data):
+		if FileType.is_file_name_txt(file_path):
+			self.__write_ascii(file_path, data)
+		elif FileType.is_file_name_las(file_path):
+			self.__write_las(file_path, data)
 		else:
 			raise Exception('Unkown file type. File name has to end either as ".txt" or ".las".')
 
-	def write_as_type(self, filePath, data, fileType):
+	def write_as_type(self, file_path, data, fileType):
 		if (fileType.lower() == 'txt'):
-			return self.__write_ascii(filePath, data)
+			return self.__write_ascii(file_path, data)
 		elif (fileType.lower() == 'las'):
-			return self.__write_las(filePath, data)
+			return self.__write_las(file_path, data)
+		else:
+			raise Exception('Unknown file type. Supported types are: "txt" and "las".')
+			
+	def write_safe(self, file_path, data):
+		if FileType.is_file_name_txt(file_path):
+			self.__write_ascii(file_path, data)
+		elif FileType.is_file_name_las(file_path):
+			self.__write_las(file_path, data)
+		else:
+			raise Exception('Unkown file type. File name has to end either as ".txt" or ".las".')
+
+	def write_as_type_safe(self, file_path, data, fileType):
+		if (fileType.lower() == 'txt'):
+			return self.__write_ascii(file_path, data)
+		elif (fileType.lower() == 'las'):
+			return self.__write_las(file_path, data)
 		else:
 			raise Exception('Unknown file type. Supported types are: "txt" and "las".')
 			
@@ -95,10 +116,31 @@ class FileWriter():
 	def __write_las(self, path, data):
 		with open (path, 'wb') as f:
 			for line in data:
-				st = struct.pack('fff', float(line[0]), float(line[1]), float(line[2]))
-				st += struct.pack('H', int(line[3]))
-				st += struct.pack('II', int(line[4]), int(line[5]))
-				st += struct.pack('BBBBB', int(line[6]), int(line[7]), int(line[8]), int(line[9]), int(line[10]))
-				st += struct.pack('H', int(line[11]))
-				st += struct.pack('d', float(line[12]))
+				st = self.__las_line_binary_builder(line)
 				f.write(st)
+				
+	def __write_las_safe(self, path, data):
+		with open (path, 'wb') as f:
+			for line in data:
+				self.__check_if_las_line_is_safe(line)
+				st = self.__las_line_binary_builder(line)
+				f.write(st)
+					
+	def __las_line_binary_builder(self, line):
+		try:
+			st = struct.pack('fff', float(line[0]), float(line[1]), float(line[2]))
+			st += struct.pack('H', int(line[3]))
+			st += struct.pack('BB', int(line[4]), int(line[5]))		# only 3 bits each allowed
+			st += struct.pack('??', int(line[6]), int(line[7]))
+			st += struct.pack('BBB', int(line[8]), int(line[9]), int(line[10]))
+			st += struct.pack('H', int(line[11]))
+			st += struct.pack('d', float(line[12]))
+			return st
+		except:
+			raise Exception("Unable to write las file, line: " + ''.join(line))
+			
+	def __check_if_las_line_is_safe(self, line):
+		if line[4] > 4 or line[4] < 0:
+			raise Exception("'Return Number' doesn't have 3 bit value. Value: " + str(line[4]))
+		if line[5] > 4 or line[5] < 0:
+			raise Exception("'Scan Direction Flag' doesn't have 3 bit value. Value: " + str(line[5]))
