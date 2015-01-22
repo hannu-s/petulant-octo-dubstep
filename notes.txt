@@ -1,0 +1,6 @@
+muistio
+
+http://stackoverflow.com/questions/556405/what-do-real-user-and-sys-mean-in-the-output-of-time1
+
+-selvitä mikä tekee fileToolsista niin paljon hitaamman
+	-tod.näk. luokka rakenne

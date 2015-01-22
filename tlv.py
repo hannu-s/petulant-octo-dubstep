@@ -14,24 +14,46 @@ u = 1
 p = 23 
 t = 20933176.629502
 
-with open ('data.bin', 'wb') as f:
-	st = struct.pack('fff', x,y,z)
-	st += struct.pack('H', i)
-	st += struct.pack('BB', r,n)
-	st += struct.pack('??', d, e) 
-	st += struct.pack('BBB', c, a, u)
-	st += struct.pack('H', p)
-	st += struct.pack('d', t)	
-	f.write(st)
+''' LAS Writing '''
+'''
+with open ('2.las', 'wb') as f:
+	for asd in range(1000000):
+		st = struct.pack('fff', x,y,z)
+		st += struct.pack('H', i)
+		st += struct.pack('BB', r,n)
+		st += struct.pack('??', d, e) 
+		st += struct.pack('BBB', c, a, u)
+		st += struct.pack('H', p)
+		st += struct.pack('d', t)	
+		f.write(st)
+'''
 
-with open ('data.bin', 'rb') as f:
-	data = f.read(31)
-	value = struct.unpack('fff', data[:12])
-	value += struct.unpack('H', data[12:14])
-	value += struct.unpack('BB', data[14:16])
-	value += struct.unpack('??', data[16:18])
-	value += struct.unpack('BBB', data[18:21])
-	value += struct.unpack('H', data[21:23])
-	value += struct.unpack('d', data[23:31])
+''' LAS REAGIN '''
+'''
+with open ('1.las', 'rb') as f:
+	li = list()
+	for i in range(1000000):
+		data = f.read(31)
+		value = struct.unpack('fff', data[:12])
+		value += struct.unpack('H', data[12:14])
+		value += struct.unpack('BB', data[14:16])
+		value += struct.unpack('??', data[16:18])
+		value += struct.unpack('BBB', data[18:21])
+		value += struct.unpack('H', data[21:23])
+		value += struct.unpack('d', data[23:31])
+		li.append(value)
+'''
+
+'''
+with open ('3.txt', 'w') as f:
+	for loop in range(1000000):
+		line = str(x) + " " + str(y) + " " + str(z) + " " + str(i) + " " + str(r) + " " + str(n) + " " + str(d) + " " + str(e) + " " + str(c) + " " + str(a) + " " + str(u) + " " + str(p) + " " + str(t) + "\n"
+		f.write(line)
+'''
+
+with open ('3.txt', 'r') as f:
+	data = list()
+	for loop in range(1000000):
+		line = f.readline().replace("\n", "").split(" ")
+		data.append(line)
 	
-	print(value)
