@@ -87,9 +87,8 @@ class FileWriter():
 			
 	def __write_ascii(self, path, data):
 		with open(path, 'w') as f:
-			print(data)
 			for line in (data):
-				line = str(line).replace(',','')
+				line = str(line).replace(',','').replace("'", "")
 				line = line[1:-1] + '\n'
 				f.write(line)
 					
