@@ -4,3 +4,12 @@ http://stackoverflow.com/questions/556405/what-do-real-user-and-sys-mean-in-the-
 
 -selvitä mikä tekee fileToolsista niin paljon hitaamman
 	-tod.näk. luokka rakenne
+
+http://www.asprs.org/a/society/committees/standards/LAS_1_3_r11.pdf
+sivu 7, XYZ scale factors ja offset pitää ottaa huomioon
+headerin luku pitää olla
+
+
+-headeri luetaan omaan instanssiin
+-jokainen data rivi luetaan omaan instanssiin jotka tallennetaan listaan (käyttää hyväkseen headerin instanssia)
+-pitää varmistaa että tyypitys pysyy oikeana
