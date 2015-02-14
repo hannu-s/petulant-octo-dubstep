@@ -1,7 +1,6 @@
 import struct
 
 type_sizes = {'char' : 1, 'unsigned char' : 1, 'unsigned short' : 2, 'unsigned long' : 4, 'unsigned long long' : 8, 'double' : 8}
-# unsigned long = 'L', but 'L' requires 8 bytes, unsigned integer = 'I', requires 4 bytes
 type_struct_codes = {'char' : 'c', 'unsigned char' : 'B', 'unsigned short' : 'H', 'unsigned long' : 'L', 'unsigned long long' : 'Q', 'double' : 'd'}
 
 class LasHeader():
@@ -96,13 +95,7 @@ class LasHeader():
 		self.las_14_header_variable_list.append(self.number_of_extended_variable_length_records)
 		self.las_14_header_variable_list.append(self.number_of_point_records)
 		self.las_14_header_variable_list.append(self.number_of_points_by_return)
-		
-	""" Stores read data to variables 
-		data is expected in list form """
-	
-	def parse_data(self, data, bytes_read):
-		pass
-		
+				
 	""" Returns type name, count and version number in the header types"""
 	def las_format_generator(self):
 		for i in self.las_12_header_variable_list:
@@ -138,7 +131,7 @@ class LasHeader():
 				yield "".join(result), type_sizes[item['type_format']] * item['count']
 		
 	def store_header_data(self, data):
-		#1.2 header check
+		#1.2 header
 		if len(data) >= 107:
 			self.file_signature['value'] = data[0].decode("ascii") + data[1].decode("ascii") + data[2].decode("ascii") + data[3].decode("ascii")
 			self.file_source_id['value'] = data[4]
