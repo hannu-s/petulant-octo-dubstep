@@ -38,27 +38,18 @@ def read_las():
 	with open ('2.las', 'rb') as f:
 		start = timeit.default_timer()
 		li = list()
-		for i in range(1):
+		for i in range(range_value):
 			data = f.read(28)
-			
 			value = struct.unpack('iii', data[:12])
-			"""
 			value += struct.unpack('H', data[12:14])
 			value += struct.unpack('B', data[14:15])
 			value += struct.unpack('BbB', data[15:18])
 			value += struct.unpack('H', data[18:20])
-			"""
-			value += struct.unpack('HBBbBHd', data[12:28])
-			
-			#value += struct.unpack('d', data[20:28])
-			
-			
-			
+			value += struct.unpack('d', data[20:28])
 			li.append(value)
-			print(li)
 		stop = timeit.default_timer()
-	#with open ('rl.csv', 'a') as f:
-		#f.write(str(stop-start)+"\n")
+	with open ('rl.csv', 'a') as f:
+		f.write(str(stop-start)+"\n")
 
 def write_ascii():
 	with open ('1.txt', 'w') as f:

@@ -1,7 +1,12 @@
+import struct
+
+type_sizes = {'char' : 1, 'unsigned char' : 1, 'unsigned short' : 2, 'unsigned long' : 4, 'unsigned long long' : 8, 'double' : 8}
+# unsigned long = 'L', but 'L' requires 8 bytes, unsigned integer = 'I', requires 4 bytes
+type_struct_codes = {'char' : 'c', 'unsigned char' : 'B', 'unsigned short' : 'H', 'unsigned long' : 'L', 'unsigned long long' : 'Q', 'double' : 'd'}
 
 class LasHeader():
 	# Las format 1.0, and above, features here onwards
-	file_signature = {'type_format' : 'char', 'count' : 4, 'value' : {'type_format' : 'double', 'count' : 1, 'value' : None}}
+	file_signature = {'type_format' : 'char', 'count' : 4, 'value' : None}
 	file_source_id = {'type_format' : 'unsigned short', 'count' : 1, 'value' : None}
 	global_encoding = {'type_format' : 'unsigned short', 'count' : 1, 'value' : None}
 	project_id_guid_data_1 = {'type_format' : 'unsigned long', 'count' : 1, 'value' : None}
@@ -50,12 +55,7 @@ class LasHeader():
 	las_12_header_variable_list = list()
 	las_13_header_variable_list = list()
 	las_14_header_variable_list = list()
-	
-	# other
-	type_struct_codes = {'char' : 'c', 'unsigned char' : 'B', 'unsigned short' : 'H', 'unsigned long' : 'L', 'unsigned long long' : 'Q', 'double' : 'd'}
-	type_sizes = {'char' : 1, 'unsigned char' : 1, 'unsigned short' : 2, 'unsigned long' : 4, 'unsigned long long' : 8, 'double' : 8}
-
-		
+			
 	def __init__(self):
 		self.las_12_header_variable_list.append(self.file_signature)
 		self.las_12_header_variable_list.append(self.file_source_id)
@@ -84,8 +84,11 @@ class LasHeader():
 		self.las_12_header_variable_list.append(self.y_offset)
 		self.las_12_header_variable_list.append(self.z_offset)
 		self.las_12_header_variable_list.append(self.max_x)
+		self.las_12_header_variable_list.append(self.min_x)
 		self.las_12_header_variable_list.append(self.max_y)
+		self.las_12_header_variable_list.append(self.min_y)
 		self.las_12_header_variable_list.append(self.max_z)
+		self.las_12_header_variable_list.append(self.min_z)
 		
 		self.las_13_header_variable_list.append(self.start_of_wareform_data_packet_records)
 		
@@ -113,56 +116,83 @@ class LasHeader():
 			
 	""" Returns unpack string and chunksize of next header part"""
 	def struct_unpack_parameter_generator(self, for_version_minor):
-		for item in self.las_12_header_variable_list:
-			result = list()
-			for i in range(item['count']):
-				result.append(self.type_struct_codes[item['type_format']])
-			yield "".join(result), self.type_sizes[item['type_format']] * item['count']
+		if for_version_minor >= 0:
+			for item in self.las_12_header_variable_list:
+				result = list()
+				for i in range(item['count']):
+					result.append(type_struct_codes[item['type_format']])
+				yield "".join(result), type_sizes[item['type_format']] * item['count']
 		
 		if for_version_minor >= 3:
 			for item in self.las_13_header_variable_list:
 				result = list()
 				for i in range(item['count']):
-					result.append(self.type_struct_codes[item['type_format']])
-				yield "".join(result), self.type_sizes[item['type_format']] * item['count']
+					result.append(type_struct_codes[item['type_format']])
+				yield "".join(result), type_sizes[item['type_format']] * item['count']
 		
 		if for_version_minor == 4:
 			for item in self.las_14_header_variable_list:
 				result = list()
 				for i in range(item['count']):
-					result.append(self.type_struct_codes[item['type_format']])
-				yield "".join(result), self.type_sizes[item['type_format']] * item['count']
+					result.append(type_struct_codes[item['type_format']])
+				yield "".join(result), type_sizes[item['type_format']] * item['count']
 		
-	
+	def store_header_data(self, data):
+		#1.2 header check
+		if len(data) >= 107:
+			self.file_signature['value'] = data[0].decode("ascii") + data[1].decode("ascii") + data[2].decode("ascii") + data[3].decode("ascii")
+			self.file_source_id['value'] = data[4]
+			self.global_encoding['value'] = data[5]
+			self.project_id_guid_data_1['value'] = data[6]
+			self.project_id_guid_data_2['value'] = data[7]
+			self.project_id_guid_data_3['value'] = data[8]
+			self.project_id_guid_data_4['value'] = list(data[9:16])
+			self.version_major['value'] = data[17]
+			self.version_minor['value'] = data[18]
+			self.system_identifier['value'] = data[19].decode("ascii") + data[20].decode("ascii") + data[21].decode("ascii") + data[22].decode("ascii") + data[23].decode("ascii") + data[24].decode("ascii") + data[25].decode("ascii") + data[26].decode("ascii") + data[27].decode("ascii") + data[28].decode("ascii") + data[29].decode("ascii") + data[30].decode("ascii") + data[31].decode("ascii") + data[32].decode("ascii") + data[33].decode("ascii") + data[34].decode("ascii") + data[35].decode("ascii") + data[36].decode("ascii") + data[37].decode("ascii") + data[38].decode("ascii") + data[39].decode("ascii") + data[40].decode("ascii") + data[41].decode("ascii") + data[42].decode("ascii") + data[43].decode("ascii") + data[44].decode("ascii") + data[45].decode("ascii") + data[46].decode("ascii") + data[47].decode("ascii") + data[48].decode("ascii") + data[49].decode("ascii") + data[50].decode("ascii")
+			self.generating_software['value'] = data[51].decode("ascii") + data[52].decode("ascii") + data[53].decode("ascii") + data[54].decode("ascii") + data[55].decode("ascii") + data[56].decode("ascii") + data[57].decode("ascii") + data[58].decode("ascii") + data[59].decode("ascii") + data[60].decode("ascii") + data[61].decode("ascii") + data[62].decode("ascii") + data[63].decode("ascii") + data[64].decode("ascii") + data[65].decode("ascii") + data[66].decode("ascii") + data[67].decode("ascii") + data[68].decode("ascii") + data[69].decode("ascii") + data[70].decode("ascii") + data[71].decode("ascii") + data[72].decode("ascii") + data[73].decode("ascii") + data[74].decode("ascii") + data[75].decode("ascii") + data[76].decode("ascii") + data[77].decode("ascii") + data[78].decode("ascii") + data[79].decode("ascii") + data[80].decode("ascii") + data[81].decode("ascii") + data[82].decode("ascii")
+			self.file_creation_day_of_year['value'] = data[83]
+			self.file_creation_year['value'] = data[84]
+			self.header_size['value'] = data[85]
+			self.offset_to_point_data['value'] = data[86]
+			self.number_of_variable_length_records['value'] = data[87]
+			self.point_data_record_format['value'] = data[88]
+			self.point_data_record_length['value'] = data[89]
+			self.legacy_number_of_point_records['value'] = data[90]
+			self.legacy_number_of_point_by_return['value'] = data[91] + data[92] + data[93] + data[94] + data[95]
+			self.x_scale_factor['value'] = data[96]
+			self.y_scale_factor['value'] = data[97]
+			self.z_scale_factor['value'] = data[98]
+			self.x_offset['value'] = data[99]
+			self.y_offset['value'] = data[100]
+			self.z_offset['value'] = data[101]
+			self.max_x['value'] = data[102]
+			self.min_x['value'] = data[103]
+			self.max_y['value'] = data[104]
+			self.min_y['value'] = data[105]
+			self.max_z['value'] = data[106]
+			self.min_z['value'] = data[107]
+			
 	def unkown_version_exception(self):
 		raise Exception("Version not supported! Version: " + str(self.version_major) + "." + str(self.version_minor))
 
 class Las():
-	type_sizes = {'char' : 1, 'unsigned char' : 1, 'unsigned short' : 2, 'unsigned long' : 4, 'unsigned long long' : 8, 'double' : 8}
-	type_struct_codes = {'char' : 'c', 'unsigned char' : 'B', 'unsigned short' : 'H', 'unsigned long' : 'L', 'unsigned long long' : 'Q', 'double' : 'd'}
 	las_header = None
 	
 	def __init__(self):
 		self.las_header = LasHeader()
-			
-	def hue(self):
-		generator = self.las_header.struct_unpack_parameter_generator(4)
-		#for format, count, version in generator:
-			#print (format + " " + str(count) + " " + version)
-			
-		for unpack_str, chunksize in generator:
-				print (unpack_str + " " + str(chunksize))
-			
 
 	def read(self, file_path):
-		generator = self.las_header.struct_unpack_parameter_generator()
+		generator = self.las_header.struct_unpack_parameter_generator(2)
 		with open (file_path, 'rb') as f:
 			parsed_data = list()
-			data_in_file = f.read(las_header.las_12_header_size)
+			current_offset = 0
+			data_in_file = f.read(self.las_header.las_12_header_size)
 			for unpack_str, chunksize in generator:
-				print (unpack_str + " " + chunksize)
-			
+				parsed_data += struct.unpack('<' + unpack_str, data_in_file[current_offset: current_offset + chunksize])
+				current_offset += chunksize
+			self.las_header.store_header_data(parsed_data)
 
 				
 a = Las()
-a.hue()
+a.read('data_N4324F2.laz')
