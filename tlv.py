@@ -90,3 +90,4 @@ if sys.argv[1] == "wa":
 	
 if sys.argv[1] == "ra":
 	read_ascii()
+	

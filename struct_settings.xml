@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<endian>
+		<type>
+			<name>little-endian</name>
+			<base10>60</base10>
+		</type>
+		<type>
+			<name>big-endian</name>
+			<base10>62</base10>
+		</type>
+		<type>
+			<name>native</name>
+			<base10>64</base10>
+		</type>
+		<type>
+			<name>network</name>
+			<base10>33</base10>
+		</type>
+	</endian>
+	<format>
+		<name>char</name>
+		<code>c</code>
+		<size>1</size>
+	</format>
+	<format>
+		<name>unsigned char</name>
+		<code></code>
+		<size>1</size>
+	</format>
+	<format>
+		<name>unsigned short</name>
+		<code></code>
+		<size>2</size>
+	</format>
+	<format>
+		<name>unsigned long</name>
+		<code></code>
+		<size>4</size>
+	</format>
+	<format>
+		<name>unsigned long long</name>
+		<code></code>
+		<size>8</size>
+	</format>
+	<format>
+		<name>double</name>
+		<code></code>
+		<size>8</size>
+	</format>
+	<format>
+		<name>bit</name>
+		<action>bit</action>
+	</format>
+</root>

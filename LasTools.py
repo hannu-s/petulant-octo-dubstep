@@ -96,7 +96,7 @@ class LasHeader():
 		self.las_14_header_variable_list.append(self.number_of_point_records)
 		self.las_14_header_variable_list.append(self.number_of_points_by_return)
 				
-	""" Returns type name, count and version number in the header types"""
+	""" Returns type name, chunksize and version number in the header types"""
 	def las_format_generator(self):
 		for i in self.las_12_header_variable_list:
 			yield i['type_format'], i['count'], "1.2"
@@ -165,7 +165,7 @@ class LasHeader():
 			self.min_y['value'] = data[105]
 			self.max_z['value'] = data[106]
 			self.min_z['value'] = data[107]
-			
+						
 	def unkown_version_exception(self):
 		raise Exception("Version not supported! Version: " + str(self.version_major) + "." + str(self.version_minor))
 
@@ -182,6 +182,7 @@ class Las():
 			current_offset = 0
 			data_in_file = f.read(self.las_header.las_12_header_size)
 			for unpack_str, chunksize in generator:
+				# the '<' character stands for 'little-endian'
 				parsed_data += struct.unpack('<' + unpack_str, data_in_file[current_offset: current_offset + chunksize])
 				current_offset += chunksize
 			self.las_header.store_header_data(parsed_data)

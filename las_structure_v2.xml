@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<las>
+	<settings>
+		<variable name="endian">little-endian</variable>
+	</settings>
+	<header name="Public Header Block">
+		<variation format="1.0">
+			<variable name="File Signature">
+				<type>char</type>
+				<count>4</count>
+			</variable>
+			<variable name="File Source ID">
+				<type>unsigned short</type>
+				<count>1</count>
+			</variable>
+			<variable name="Global Encoding">
+				<type>unsigned short</type>
+				<count>1</count>
+			</variable>
+			<variable name="Project ID - GUID data 1">
+				<type>unsigned long</type>
+				<count>1</count>
+			</variable>
+			<variable name="Project ID - GUID data 2">
+				<type>unsigned short</type>
+				<count>1</count>
+			</variable>
+			<variable name="Project ID - GUID data 3">
+				<type>unsigned short</type>
+				<count>1</count>
+			</variable>
+			<variable name="Project ID - GUID data 4">
+				<type>unsigned char</type>
+				<count>8</count>
+			</variable>
+			<variable name="Version Major">
+				<type>unsigned char</type>
+				<count>1</count>
+			</variable>
+			<variable name="Version Minor">
+				<type>unsigned char</type>
+				<count>1</count>
+			</variable>
+			<variable name="System Identifier">
+				<type>char</type>
+				<count>32</count>
+			</variable>
+			<variable name="Generating Software">
+				<type>char</type>
+				<count>32</count>
+			</variable>
+			<variable name="File Creation Day of Year">
+				<type>unsigned short</type>
+				<count>1</count>
+			</variable>
+			<variable name="File Creation Year">
+				<type>unsigned short</type>
+				<count>1</count>
+			</variable>
+			<variable name="Header Size">
+				<type>unsignsigned short</type>
+				<count>1</count>
+			</variable>
+			<variable name="Offset to Point Data">
+				<type>unsigned long</type>
+				<count>1</count>
+			</variable>
+			<variable name="Number of Variable Length Records">
+				<type>unsigned long</type>
+				<count>1</count>
+			</variable>
+			<variable name="Point Data Record Format">
+				<type>unsigned char</type>
+				<count>1</count>
+			</variable>
+			<variable name="Point Data Record Length">
+				<type>unsigned short</type>
+				<count>1</count>
+			</variable>
+			<variable name="Legacy Number of Point Records">
+				<type>unsigned long</type>
+				<count>1</count>
+			</variable>
+			<variable name="Legacy Number of Point by Return">
+				<type>unsigned long</type>
+				<count>5</count>
+			</variable>
+			<variable name="X Scale Factor">
+				<type>double</type>
+				<count>1</count>
+			</variable>
+			<variable name="Y Scale Factor">
+				<type>double</type>
+				<count>1</count>
+			</variable>
+			<variable name="Z Scale Factor">
+				<type>double</type>
+				<count>1</count>
+			</variable>
+			<variable name="X Offset">
+				<type>double</type>
+				<count>1</count>
+			</variable>
+			<variable name="Y Offset">
+				<type>double</type>
+				<count>1</count>
+			</variable>
+			<variable name="Z Offset">
+				<type>double</type>
+				<count>1</count>
+			</variable>
+			<variable name="Max X">
+				<type>double</type>
+				<count>1</count>
+			</variable>
+			<variable name="Min X">
+				<type>double</type>
+				<count>1</count>
+			</variable>
+			<variable name="Max Y">
+				<type>double</type>
+				<count>1</count>
+			</variable>
+			<variable name="Min Y">
+				<type>double</type>
+				<count>1</count>
+			</variable>
+			<variable name="Max Z">
+				<type>double</type>
+				<count>1</count>
+			</variable>
+			<variable name="Min Z">
+				<type>double</type>
+				<count>1</count>
+			</variable>
+		</variation>
+		<variation format="1.1">
+			<copy format="1.0"/>
+		</variation>
+		<variation format="1.2">
+			<copy format="1.1"/>
+		</variation>
+		<variation format="1.3">
+			<copy format="1.2"/>
+			<variable name="Start of Waveform Data Packet Record">
+				<type>unsigned long long</type>
+				<count>1</count>
+			</variable>
+		</variation>
+		<variation format="1.4">
+			<copy format="1.3"/>
+			<variable name="Start of First Extended Variable Length Record">
+				<type>unsigned long long</type>
+				<count>1</count>
+			</variable>
+			<variable name="Number of Extended Variable Length Records">
+				<type>unsigned long</type>
+				<count>1</count>
+			</variable>
+			<variable name="Number of Point Records">
+				<type>unsigned long long</type>
+				<count>1</count>
+			</variable>
+			<variable name="Number of Points by Return">
+				<type>unsigned long long</type>
+				<count>15</count>
+			</variable>
+		</variation>
+	</header>
+	<block name="Variable Length Records">
+		<variation format="default">
+			<variable name="Reserved">
+				<type>unsigned short</type>
+				<count>1</count>
+			</variable>
+			<variable name="User ID">
+				<type>char</type>
+				<count>16</count>
+			</variable>
+			<variable name="Record ID">
+				<type>unsigned short</type>
+				<count>1</count>
+			</variable>
+			<variable name="Record Length After Header">
+				<type>unsigned short</type>
+				<count>1</count>
+			</variable>
+			<variable name="Description">
+				<type>char</type>
+				<count>32</count>
+			</variable>
+		</variation>
+	</block>
+	<block name="Point Data Records">
+		<variation format="1">
+			<variable name="X">
+				<type>long</type>
+				<count>1</count>
+			</variable>
+			<variable name="Y">
+				<type>long</type>
+				<count>1</count>
+			</variable>
+			<variable name="Z">
+				<type>long</type>
+				<count>1</count>
+			</variable>
+			<variable name="Intensity">
+				<type>unsigned short</type>
+				<count>1</count>
+			</variable>
+			<variable name="Return Number">
+				<type>bit</type>
+				<count>3</count>
+			</variable>
+			<variable name="Number of Returns">
+				<type>bit</type>
+				<count>3</count>
+			</variable>
+			<variable name="Scan Direction Flag">
+				<type>bit</type>
+				<count>1</count>
+			</variable>
+			<variable name="Edge of Flight Line">
+				<type>bit</type>
+				<count>1</count>
+			</variable>
+			<variable name="Classification">
+				<type>unsigned char</type>
+				<count>1</count>
+			</variable>
+			<variable name="Scan Angle Rank - Left Side">
+				<type>char</type>
+				<count>1</count>
+			</variable>
+			<variable name="User Data">
+				<type>unsigned char</type>
+				<count>1</count>
+			</variable>
+			<variable name="Point Source ID">
+				<type>unsigned short</type>
+				<count>1</count>
+			</variable>
+			<variable name="GPS Time">
+				<type>double</type>
+				<count>1</count>
+			</variable>
+		</variation>
+	</block>
+	<block name="Extended Variable Length Records">
+		<variation format="default">
+			<variable name="Reserved">
+				<type>unsigned short</type>
+				<count>1</count>
+			</variable>
+			<variable name="User ID">
+				<type>char</type>
+				<count>16</count>
+			</variable>
+			<variable name="Record ID">
+				<type>unsigned short</type>
+				<count>1</count>
+			</variable>
+			<variable name="Record Length After Header">
+				<type>unsigned short</type>
+				<count>1</count>
+			</variable>
+			<variable name="Description">
+				<type>char</type>
+				<count>32</count>
+			</variable>
+		</variation>
+	</block>
+</las>
