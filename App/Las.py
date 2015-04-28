@@ -244,7 +244,7 @@ class Las():
 				
 			# read pdr
 			pdr_format = self.header.point_data_record_format
-			
+						
 			if not self.is_pdr_format_valid(pdr_format):
 				print("PDR format not recognized. Format was: "+str(pdr_format))
 				pdr_format = int(input("Set pdr format manually: "))
@@ -257,13 +257,10 @@ class Las():
 					pdr = PointDataRecord()
 					pdr.format1(converted_data, self.header)
 					self.point_data_records.append(pdr)
-					if i == 1000:
-						break
 					if i % 50000 == 0:
 						print(str(i) + "/" + str(self.header.legacy_number_of_point_records))
 			else:
 				raise Exception("PDR format unsupported: " + pdr_format)
-			#print(pdr_format)
 		
 	def write(self, file_name):
 		with open(file_name, 'wb') as f:
@@ -279,7 +276,7 @@ class Las():
 			#write PDRs			
 			for pdr in self.point_data_records:
 				f.write(struct.pack(PointDataRecordVariables.get_format_1_struct_parameters(), pdr.x, pdr.y, pdr.z, pdr.intensity, str.encode('a'), pdr.classification, pdr.scan_angle_rank, pdr.user_data, pdr.point_source_id, pdr.gps_time))
-			
+		
 l = Las()
-l.load("../data_N4324F2.laz")
-l.write("../data_N4324F2_a.laz")
+l.load("../data_zN4324F2.las")
+l.write("../data_zN4324F2_a.las")
